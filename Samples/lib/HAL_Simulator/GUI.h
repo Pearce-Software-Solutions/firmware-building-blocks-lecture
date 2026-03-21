@@ -39,6 +39,7 @@ private:
 tGUI::tGUI()
 {
 	initscr();
+  curs_set(0); // Hide cursor
 	noecho(); // Don't echo typed characters
 	keypad(stdscr, TRUE);
 	refresh(); // Initialize stdscr

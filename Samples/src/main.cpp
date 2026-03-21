@@ -179,7 +179,6 @@ void loop() {
 static const unsigned long HeartbeatFlashMS = 1000;
 static const unsigned long HeartbeatFlashFastMS = 200;
 
-static const unsigned long ButtonHeldMS = 1000;
 static tButton button1;
 static tButton button2;
 static bool buttonWasHeld = false;
@@ -199,7 +198,7 @@ void loop() {
   ButtonUpdate(&button2);
   HeartbeatUpdate();
 
-  if (ButtonHeld(&button2, ButtonHeldMS)) {
+  if (ButtonPressed(&button2)) {
     if (!buttonWasHeld) {
       HeartbeatStart(HeartbeatFlashFastMS);
       buttonWasHeld = true;
