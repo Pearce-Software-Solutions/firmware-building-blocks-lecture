@@ -1,7 +1,7 @@
 #include "HAL.h"
 
 // Define the LESSON value to select which lesson code to compile.
-#define LESSON (2)
+#define LESSON (6)
 
 #if !defined(LESSON)
 #error LESSON must be defined
