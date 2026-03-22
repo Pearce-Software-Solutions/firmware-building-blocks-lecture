@@ -1,7 +1,7 @@
 #include "HAL.h"
 
 // Define the LESSON value to select which lesson code to compile.
-#define LESSON (6)
+#define LESSON (2)
 
 #if !defined(LESSON)
 #error LESSON must be defined
@@ -24,47 +24,21 @@ void loop() {
 #elif (LESSON == 2)
 
 static const int HeartbeatFlashMS = 1000;
-typedef enum {eHeartbeatMode_Off, eHeartbeatMode_On} eHeartbeatMode;
-static eHeartbeatMode heartbeatMode = eHeartbeatMode_On;
-
-static bool buttonState = false;
+static unsigned long heartbeatLastMS = 0;
+static bool heartbeatState = true;
 
 void setup() {
-  digitalWrite(HeartbeatLEDPin, LOW);
+  digitalWrite(HeartbeatLEDPin, heartbeatState ? HIGH : LOW);
   pinMode(HeartbeatLEDPin, OUTPUT);
-
-  pinMode(Button1Pin, INPUT_PULLUP);
-  buttonState = (digitalRead(Button1Pin) == 0);
+  heartbeatLastMS = millis();
 }
 
-// If button is short pressed, start/stop heartbeat flashing.
 void loop() {
-  // Button presses can happen anytime, but we can only process them
-  // when we reach this point in the code (once every 2 seconds).
-  bool newButtonState = (digitalRead(Button1Pin) == 0);
-  if (newButtonState != buttonState) {
-    buttonState = newButtonState;
-
-    if (buttonState) {
-      if (heartbeatMode == eHeartbeatMode_On) {
-        heartbeatMode = eHeartbeatMode_Off;
-      }
-      else {
-        heartbeatMode = eHeartbeatMode_On;
-      }
+    if ((millis() - heartbeatLastMS) >= HeartbeatFlashMS) {
+      heartbeatLastMS = millis();
+      heartbeatState = !heartbeatState;
+      digitalWrite(HeartbeatLEDPin, heartbeatState ? HIGH : LOW);
     }
-  }
-
-  if (heartbeatMode == eHeartbeatMode_On) {
-    sleep_ms(HeartbeatFlashMS);
-    digitalWrite(HeartbeatLEDPin, HIGH);
-    sleep_ms(HeartbeatFlashMS);
-    digitalWrite(HeartbeatLEDPin, LOW);
-  }
-  else {
-    // Add a short sleep to help smooth out button presses without debouncing.
-    sleep_ms(HeartbeatFlashMS);
-  }
 }
 
 #elif (LESSON == 3)
